@@ -1,0 +1,11 @@
+{
+  "name": "popr",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "sh build.sh"
+  },
+  "author": "",
+  "license": "ISC",
+  "repository": "git@github.com:jayli/popr.git"
+}
