@@ -1,11 +1,15 @@
 // bindgen 可生成更完整的绑定，这里手动声明
 unsafe extern "C" {
     fn get_selected_text() -> *const std::os::raw::c_char;
+    fn get_hello() -> *const std::os::raw::c_char;
     fn free_selected_text_string(str: *const std::os::raw::c_char);
 }
 
 fn main() {
     unsafe {
+        let hello_text = get_hello();
+        let hello_str = std::ffi::CStr::from_ptr(hello_text).to_string_lossy().into_owned();
+        println!("{}", hello_str);
         let c_str = get_selected_text();
         if !c_str.is_null() {
             let rust_str = std::ffi::CStr::from_ptr(c_str).to_string_lossy().into_owned();
