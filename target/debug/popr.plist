@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- 应用名称 -->
+    <key>CFBundleName</key>
+    <string>popr</string>
+
+    <!-- 唯一标识符，格式：com.公司名.应用名 -->
+    <key>CFBundleIdentifier</key>
+    <string>com.popr.popr</string>
+
+    <!-- 版本号 -->
+    <key>CFBundleVersion</key>
+    <string>1.0</string>
+
+    <!-- 显示的版本号 -->
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+
+    <!-- 必须：申请辅助功能权限 -->
+    <key>NSAppleEventsUsageDescription</key>
+    <string>本程序需要使用辅助功能来获取您选中的文本内容，以便提供快捷操作。</string>
+
+    <!-- 可选：如果你的应用是 GUI 应用，建议加上 -->
+    <key>LSBackgroundOnly</key>
+    <false/>
+
+    <!-- 可选：声明为 GUI 应用 -->
+    <key>LSUIElement</key>
+    <false/>
+</dict>
+</plist>

@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "npm run oc && npm run cargo && npm run cp_lib",
+    "build": "npm run oc && npm run cargo && npm run cp_lib && npm run plist",
     "start": "cargo run",
     "oc": "cd ./event-bridge && clang -fobjc-arc -framework Foundation -framework AppKit -framework ApplicationServices -shared -o libeventbridge.dylib EventBridge.m",
     "cargo": "cargo build",
-    "cp_lib": "cp ./event-bridge/libeventbridge.dylib ./target/debug/"
+    "cp_lib": "cp ./event-bridge/libeventbridge.dylib ./target/debug/",
+    "plist":"cp ./popr.plist ./target/debug/"
   },
   "author": "",
   "license": "ISC",
