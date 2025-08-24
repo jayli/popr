@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "sh build.sh"
+    "build": "npm run oc && npm run cargo && npm run cp_lib",
+    "oc": "cd ./event-bridge && clang -fobjc-arc -framework Foundation -framework AppKit -framework ApplicationServices -shared -o libeventbridge.dylib EventBridge.m",
+    "cargo": "cargo build",
+    "cp_lib": "cp ./event-bridge/libeventbridge.dylib ./target/debug/"
   },
   "author": "",
   "license": "ISC",
