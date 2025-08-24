@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "npm run oc && npm run cargo && npm run cp_lib && npm run plist",
+    "build_all": "npm run oc && npm run cargo && npm run cp_lib && npm run plist",
+    "build_oc": "npm run oc && npm run cp_lib",
+    "build_rust": "npm run cargo",
     "dev": "cargo run",
     "oc": "cd ./event-bridge && clang -fobjc-arc -framework Foundation -framework AppKit -framework ApplicationServices -shared -o libeventbridge.dylib EventBridge.m",
     "cargo": "cargo build",

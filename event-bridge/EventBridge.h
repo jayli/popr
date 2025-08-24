@@ -2,7 +2,7 @@
 //  EventBridge.h
 //  EventBridge
 //
-//  Created by HFY on 2025/8/24.
+//  Created by bachi on 2025/8/24.
 //
 
 #import <Foundation/Foundation.h>
@@ -26,7 +26,7 @@ extern "C" {
 const char* _Nullable get_selected_text(void);
 
 /// 释放由 get_selected_text 返回的字符串内存（可选）
-void free_selected_text_string(const char* str);
+void free_selected_text(const char* str);
 
 #ifdef __cplusplus
 }

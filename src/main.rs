@@ -2,7 +2,7 @@
 unsafe extern "C" {
     fn get_selected_text() -> *const std::os::raw::c_char;
     fn get_hello() -> *const std::os::raw::c_char;
-    fn free_selected_text_string(str: *const std::os::raw::c_char);
+    fn free_selected_text(str: *const std::os::raw::c_char);
 }
 
 fn main() {

@@ -2,7 +2,7 @@
 //  EventBridge.m
 //  EventBridge
 //
-//  Created by HFY on 2025/8/24.
+//  Created by bachi on 2025/8/24.
 //
 
 // EventBridge.m
@@ -18,53 +18,49 @@ static char* g_lastSelectedText = NULL;
 @implementation EventBridge
 
 + (NSString *)getSelectedText {
-    // 获取当前最前面的应用
-    NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
-    NSArray<NSRunningApplication *> *runningApps = [workspace runningApplications];
-    
-    NSRunningApplication *frontApp = nil;
-    for (NSRunningApplication *app in runningApps) {
-        if (app.isActive) {
-            frontApp = app;
-            break;
+    @autoreleasepool {
+        // 1. 获取当前最前面的应用
+        NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
+        NSRunningApplication *frontApp = [workspace frontmostApplication];
+        if (!frontApp || !frontApp.processIdentifier) {
+            return nil;
         }
-    }
-    
-    if (!frontApp || !frontApp.processIdentifier) {
-        return nil;
-    }
-    
-    // 创建 AXUIElement
-    AXUIElementRef appRef = AXUIElementCreateApplication(frontApp.processIdentifier);
-    if (!appRef) {
-        return nil;
-    }
-    
-    // 获取焦点元素
-    AXUIElementRef focusedElement = NULL;
-    AXError result = AXUIElementCopyAttributeValue(appRef, kAXFocusedUIElementAttribute, (CFTypeRef *)&focusedElement);
-    if (result != kAXErrorSuccess || !focusedElement) {
-        CFRelease(appRef);
-        return nil;
-    }
-    
-    // 获取选中文本
-    CFStringRef selectedTextRef = NULL;
-    result = AXUIElementCopyAttributeValue(focusedElement, kAXSelectedTextAttribute, (CFTypeRef *)&selectedTextRef);
-    
-    NSString *selectedText = nil;
-    if (result == kAXErrorSuccess && selectedTextRef) {
-        selectedText = (__bridge_transfer NSString *)selectedTextRef;
-    } else {
-        // 失败时清理
+
+        // 2. 创建 AXUIElement 引用
+        AXUIElementRef appRef = AXUIElementCreateApplication(frontApp.processIdentifier);
+        if (!appRef) {
+            return nil;
+        }
+
+        // 3. 获取当前焦点元素（光标所在控件）
+        AXUIElementRef focusedElement = NULL;
+        AXError error = AXUIElementCopyAttributeValue(appRef, kAXFocusedUIElementAttribute, (CFTypeRef *)&focusedElement);
+        if (error != kAXErrorSuccess || !focusedElement) {
+            CFRelease(appRef);
+            return nil;
+        }
+
+        // 4. 获取选中的文本
+        CFTypeRef selectedTextRef = NULL;
+        error = AXUIElementCopyAttributeValue(focusedElement, kAXSelectedTextAttribute, &selectedTextRef);
+        
+        NSString *selectedText = nil;
+        if (error == kAXErrorSuccess && selectedTextRef) {
+            if (CFGetTypeID(selectedTextRef) == CFStringGetTypeID()) {
+                selectedText = CFBridgingRelease(selectedTextRef); // 自动释放
+                selectedTextRef = NULL; // 避免重复释放
+            } else {
+                CFRelease(selectedTextRef);
+            }
+        }
+
+        // 5. 清理资源
         if (selectedTextRef) CFRelease(selectedTextRef);
+        CFRelease(focusedElement);
+        CFRelease(appRef);
+
+        return selectedText;
     }
-    
-    // 清理资源
-    CFRelease(focusedElement);
-    CFRelease(appRef);
-    
-    return selectedText;
 }
 
 @end
@@ -77,13 +73,17 @@ const char* get_hello(void) {
 // C 接口实现
 const char* _Nullable get_selected_text(void) {
     @autoreleasepool {
+        // 先释放旧内存
+        if (g_lastSelectedText) {
+            free(g_lastSelectedText);
+            g_lastSelectedText = NULL;
+        }
         NSString *text = [EventBridge getSelectedText];
+
+        NSString *tt = @"sdf";
+        NSLog(@"loging-------------------- %@", text);
+
         if (!text) {
-            // 释放旧内存
-            if (g_lastSelectedText) {
-                free(g_lastSelectedText);
-                g_lastSelectedText = NULL;
-            }
             return NULL;
         }
         
@@ -91,21 +91,15 @@ const char* _Nullable get_selected_text(void) {
         const char *utf8 = [text UTF8String];
         size_t len = strlen(utf8) + 1;
         char *copied = (char *)malloc(len);
-        if (copied) {
-            strcpy(copied, utf8);
-        }
-        
-        // 释放旧内存
-        if (g_lastSelectedText) {
-            free(g_lastSelectedText);
-        }
+        strcpy(copied, utf8);
+
         g_lastSelectedText = copied;
         
         return g_lastSelectedText;
     }
 }
 
-void free_selected_text_string(const char* str) {
+void free_selected_text(const char* str) {
     if (str == g_lastSelectedText) {
         // 我们只允许释放内部字符串
         if (g_lastSelectedText) {
@@ -113,7 +107,6 @@ void free_selected_text_string(const char* str) {
             g_lastSelectedText = NULL;
         }
     }
-    // 注意：不支持释放任意指针
 }
 
 
