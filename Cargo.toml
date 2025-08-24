@@ -6,3 +6,4 @@ edition = "2024"
 [dependencies]
 rdev = "0.5.3"
 objc = "0.2.7"
+tokio = { version = "1.47.1", features = ["full"] }
