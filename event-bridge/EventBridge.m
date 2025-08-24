@@ -17,10 +17,6 @@ static char* g_lastSelectedText = NULL;
 
 @implementation EventBridge
 
-+ (NSString *)getHello {
-    return @"Hello, World!";
-}
-
 + (NSString *)getSelectedText {
     // 获取当前最前面的应用
     NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
@@ -73,20 +69,9 @@ static char* g_lastSelectedText = NULL;
 
 @end
 
-const char* _Nullable get_hello(void) {
-    @autoreleasepool {
-        char* ret_str = NULL;
-        NSString *text = [EventBridge getHello];
-        // 转为 UTF-8 并复制到堆内存
-        const char *utf8 = [text UTF8String];
-        size_t len = strlen(utf8) + 1;
-        char *copied = (char *)malloc(len);
-        if (copied) {
-            strcpy(copied, utf8);
-        }
-        ret_str = copied;
-        return ret_str;
-    }
+// 返回 UTF-8 C 字符串（注意：静态存储 or malloc）
+const char* get_hello(void) {
+    return "Hello world!!!";
 }
 
 // C 接口实现
