@@ -65,13 +65,15 @@ static char* g_lastSelectedText = NULL;
 
 @end
 
+
+// C 接口 -----------------------------------------
+
 // 返回 UTF-8 C 字符串（注意：静态存储 or malloc）
-const char* get_hello(void) {
+const char* get_hello_from_oc(void) {
     return "Hello world!!!";
 }
 
-// C 接口实现
-const char* _Nullable get_selected_text(void) {
+const char* _Nullable get_selected_text_from_oc(void) {
     @autoreleasepool {
         // 先释放旧内存
         if (g_lastSelectedText) {
@@ -80,8 +82,8 @@ const char* _Nullable get_selected_text(void) {
         }
         NSString *text = [EventBridge getSelectedText];
 
-        NSString *tt = @"sdf";
-        NSLog(@"loging-------------------- %@", text);
+        // NSString *tt = @"sdf";
+        // NSLog(@"loging-------------------- %@", text);
 
         if (!text) {
             return NULL;
@@ -99,7 +101,7 @@ const char* _Nullable get_selected_text(void) {
     }
 }
 
-void free_selected_text(const char* str) {
+void free_selected_text_from_oc(const char* str) {
     if (str == g_lastSelectedText) {
         // 我们只允许释放内部字符串
         if (g_lastSelectedText) {
