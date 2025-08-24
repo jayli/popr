@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "build": "npm run oc && npm run cargo && npm run cp_lib",
+    "start": "cargo run",
     "oc": "cd ./event-bridge && clang -fobjc-arc -framework Foundation -framework AppKit -framework ApplicationServices -shared -o libeventbridge.dylib EventBridge.m",
     "cargo": "cargo build",
     "cp_lib": "cp ./event-bridge/libeventbridge.dylib ./target/debug/"
